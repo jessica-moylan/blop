@@ -1,0 +1,26 @@
+[workspace]
+authors = ["Brookhaven National Laboratory <jessicamoylan10@gmail.com>"]
+channels = ["conda-forge"]
+name = "blop"
+platforms = ["linux-64"]
+
+[tasks]
+
+[dependencies]
+tiled = ">=0.1.0b29,<0.2"
+python = ">=3.13.5,<3.14"
+area-detector-handlers = ">=0.0.10,<0.0.11"
+bluesky = ">=1.14.2,<2"
+databroker = ">=2.0.0b64,<3"
+gpytorch = ">=1.14,<2"
+h5py = ">=3.14.0,<4"
+matplotlib = ">=3.10.3,<4"
+numpy = ">=2.2.6,<3"
+ophyd = ">=1.10.7,<2"
+python-tsp = ">=0.5.0,<0.6"
+scipy = ">=1.15.2,<2"
+
+[pypi-dependencies]
+tables = ">=3.10.2, <4"
+torch = "*"
+blop = { path = ".", editable = true}
