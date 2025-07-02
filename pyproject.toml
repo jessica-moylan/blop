@@ -27,7 +27,7 @@ dependencies = [
   "scipy",
   "tables",
   "torch",
-  "tiled",
+  "tiled[client]",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -53,30 +53,35 @@ adaptive = ["bluesky-adaptive"]
 xrt = ["xrt"]
 ax = ["ax-platform"]
 
-dev = [
-  "ax-platform",
-  "pytest-codecov",
-  "coverage",
+docs = [
+  "xrt",
   "furo",
   "nbstripout",
-  "pre-commit",
-  "pre-commit-hooks",
-  "pytest",
-  "sphinx",
-  "twine",
-  "ipython",
-  "jupyter",
-  "matplotlib",
+  "ruff",
+  "import-linter",
+  "sphinx-copybutton",
+  "sphinx_rtd_theme",
   "nbsphinx",
   "numpydoc",
   "pandoc",
-  "sphinx-copybutton",
-  "sphinx_rtd_theme",
-  "ruff",
-  "import-linter",
+  
   "pandas-stubs",
   "types-PyYAML",
   "mypy",
+  "sphinx",
+  "twine",
+  "coverage",
+  "pre-commit",
+  "pre-commit-hooks",
+]
+
+dev = [
+  "ax-platform",
+  "pytest-codecov",
+  "pytest",
+  "ipython",
+  "jupyter",
+  "matplotlib",
 ]
 
 [project.urls]
