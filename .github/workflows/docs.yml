@@ -80,13 +80,13 @@ jobs:
           pip install -v .[docs]
           pip list
 
-      - name: Build Docs
-        run: make -C docs/ html
+      # - name: Build Docs
+      #   run: make -C docs/ html
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.REPOSITORY_NAME }}-docs
-          path: docs/build/html/
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ env.REPOSITORY_NAME }}-docs
+      #     path: docs/build/html/
 
       - name: Deploy documentation to nsls-ii.github.io
         # if: github.repository_owner == 'NSLS-II' && github.ref_name == 'main'
