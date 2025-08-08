@@ -12,8 +12,8 @@ on:
 
 # Use concurrency to manage runs for the same commit
 concurrency:
-  group: ${{ github.workflow }}-${{ github.sha }}
-  cancel-in-progress: false
+  group: ${{ github.workflow || github.sha}}
+  cancel-in-progress: true
 
 jobs:
   check:
