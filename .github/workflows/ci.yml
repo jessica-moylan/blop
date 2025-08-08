@@ -11,19 +11,16 @@ on:
 
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow || github.sha}}
   cancel-in-progress: true
 
 jobs:
-  check:
-    uses: ./.github/workflows/_check.yml
 
   scheduled-job:
     if: github.event_name == 'schedule'
     uses: ./.github/workflows/_testing.yml
 
   lint:
-    needs: check
     if: needs.check.outputs.branch-pr == ''
     uses: ./.github/workflows/_pre-commit.yml
 
