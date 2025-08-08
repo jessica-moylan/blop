@@ -10,9 +10,8 @@ on:
   workflow_dispatch:
 
 
-# Use concurrency to manage runs for the same commit
 concurrency:
-  group: ${{ github.workflow || github.sha}}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
