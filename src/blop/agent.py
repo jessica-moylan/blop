@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import pathlib
@@ -428,22 +429,6 @@ class BaseAgent:
             train_model(obj.model)
             logger.debug(f"trained model '{obj.name}' in {1e3 * (ttime.monotonic() - t0):.00f} ms")
 
-    def deep_merge(self, dict1, dict2):
-        merged = dict1.copy()
-
-        for key, value2 in dict2.items():
-            if key in merged:
-                value1 = merged[key]
-                if isinstance(value1, dict) and isinstance(value2, dict):
-                    merged[key] = self.deep_merge(value1, value2)
-                elif isinstance(value1, list) and isinstance(value2, dict):
-                    merged[key] = value1 + value2
-                else:
-                    merged[key] = value2
-            else:
-                merged[key] = value2
-        return merged
-
     def tell(
         self,
         data: Mapping | None = {},
@@ -676,6 +661,12 @@ class Agent(BaseAgent):
         self.detectors = list(np.atleast_1d(detectors or []))
 
         self.db = db
+        if isinstance(self.db, tiled.client.container.Container):
+            self.data_access = TiledDataAccess(self.db)
+        elif isinstance(self.db, databroker.Broker):
+            self.data_access = DatabrokerDataAccess(self.db)
+        else:
+            raise ValueError("Cannot run acquistion without databroker or tiled instance!")
 
         self.trigger_delay = trigger_delay
 
@@ -820,9 +811,6 @@ class Agent(BaseAgent):
             A 2D numpy array comprising inputs for the active and non-read-only DOFs to sample.
         """
 
-        if self.db is None:
-            raise ValueError("Cannot run acquistion without databroker or tiled instance!")
-
         acquisition_dofs = self.dofs(active=True, read_only=False)
         for dof in acquisition_dofs:
             if dof.name not in points:
@@ -837,15 +825,7 @@ class Agent(BaseAgent):
                 [*self.detectors, *self.dofs.devices],
                 delay=self.trigger_delay,
             )
-
-            if isinstance(self.db[uid], tiled.client.container.Container):
-                data = TiledDataAccess()
-                products = self.digestion(
-                    data.convert_to_dictonary(self.db[uid], self.digestion_kwargs), **self.digestion_kwargs
-                )
-            else:
-                data = DatabrokerDataAccess()
-                products = self.digestion(data.convert_to_dictonary(self.db[uid]), **self.digestion_kwargs)
+            products = self.digestion(self.data_access.get_data(uid), **self.digestion_kwargs)
 
         except KeyboardInterrupt as interrupt:
             raise interrupt
@@ -1012,14 +992,14 @@ class Agent(BaseAgent):
                 else:
                     f.create_dataset(key, data=value)
 
-    def forget(self, last: int | None = None, index: list[int] | None = None, train: bool = True):
+    def forget(self, last: int | None = None, index: pd.Index | None = None, train: bool = True):
         """
         Make the agent forget some data.
 
         Parameters
         ----------
         index :
-            An list of sample indexes to forget about.
+            An index of samples to forget about.
         last : int
             Forget the last n=last points.
         """
@@ -1027,14 +1007,11 @@ class Agent(BaseAgent):
         if last is not None:
             if last > num_samples:
                 raise ValueError(f"Cannot forget last {last} data points (only {num_samples} samples have been taken).")
-            self._table = {
-                key: [item for i, item in enumerate(value) if i not in set(range(num_samples - last, num_samples))]
-                for key, value in self._table.items()
-            }
+            self._table = {key: value[:-last] for key, value in self._table.items()}
+
         elif index is not None:
-            self._table = {
-                key: [item for i, item in enumerate(value) if i not in index] for key, value in self._table.items()
-            }
+            self._table = pd.DataFrame(self._table).drop(index=index)
+            self._table = {key: self._table[key].to_list() for key in self._table}
             self._construct_all_models()
             if train:
                 self._train_all_models()
@@ -1106,17 +1083,26 @@ class Agent(BaseAgent):
         """
         return acquisition.all_acqfs()
 
+    # TODO: write a function that does this than converts back to the format the user would like that would make more sense
     @property
     def best(self) -> dict:
         """Returns all data for the best point."""
-        if isinstance(self.db, tiled.client.container.Container):
-            tiled_data = TiledDataAccess()
-            df = tiled_data.convert_back_from_dictonary(self._table)
-            return df.isel({list(df.dims)[0]: self.argmax_best_f()})
-        elif isinstance(self.db, databroker.v1.Broker):
-            db_data = DatabrokerDataAccess()
-            return db_data.convert_back_from_dictonary(self._table).loc[self.argmax_best_f()]
-        return ValueError("Unsupported data type for best point retrieval.")
+        # print(type(pd.DataFrame(self._table)["bbox"][1]))
+        df = {key: value[self.argmax_best_f() - 1] for key, value in self._table.items()}
+        self._table.pop("time", None)
+
+        # You would still need to handle the other non-JSON-serializable types, like NumPy arrays and floats.
+        json_compatible_dict = {}
+        for key, value in self._table.items():
+            if isinstance(value, (np.ndarray, np.bool_, np.str_)):
+                json_compatible_dict[key] = value.tolist() if isinstance(value, np.ndarray) else value.item()
+            else:
+                json_compatible_dict[key] = value
+
+        # Save the dictionary without the timestamp to a JSON file
+        with open("data_no_timestamp.json", "w") as json_file:
+            json.dump(json_compatible_dict, json_file, indent=4)
+        return self.data_access.convert_data(df)
 
     @property
     def best_inputs(self) -> dict[Hashable, Any]:
