@@ -10,6 +10,7 @@ h5py
 import-linter
 ipython
 jupyter
+jupyterlab_myst
 matplotlib
 mypy
 nbsphinx
