@@ -17,6 +17,8 @@ area-detector-handlers = ">=0.0.10, <0.0.11"
 h5py = "*"
 tiled = ">=0.1.0b30, <0.2"
 databroker = ">=1.2.0, <1.3"
+jupyterlab = ">=4.4.7,<5"
+jupytext = ">=1.17.3,<2"
 
 [pypi-dependencies]
 botorch = ">=0.14.0, <0.15"
@@ -86,6 +88,12 @@ python = "3.11.*"
 
 [feature.py312.dependencies]
 python = "3.12.*"
+
+[feature.dev.activation]
+# Workaround overrides JupyterLab configuration (at the environment level) to
+# make double-clicking on a Jupytext Markdown file open that file as a
+# notebook. This is important for the development workflow for contributors.
+scripts = ["activate.sh"]
 
 [environments]
 adaptive = {features=["adaptive"], solve-group="all"}

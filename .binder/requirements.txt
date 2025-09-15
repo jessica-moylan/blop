@@ -11,6 +11,7 @@ import-linter
 ipython
 jupyter
 jupyterlab_myst
+jupytext
 matplotlib
 mypy
 nbsphinx
