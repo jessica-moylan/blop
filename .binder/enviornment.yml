@@ -1,0 +1,30 @@
+name: my-binder-env
+channels:
+  - conda-forge
+  - anaconda
+  - pytorch
+  - defaults
+dependencies:
+  # Conda-installable packages
+  - area-detector-handlers
+  - ax-platform
+  - bluesky[base]
+  - jupytext
+  - matplotlib[base]
+  - jupyterlab
+  - databroker
+  - tiled[server, minimal-client]
+  - h5py
+  - area-detector-handlers
+  - ophyd
+  - numpy
+  - scipy
+  - ipython
+  - jupyter
+
+  # Pip-only packages
+  - pip:
+    - botorch
+    - gpytorch
+    - tables
+    - torch
