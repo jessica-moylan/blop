@@ -1,1 +1,7 @@
-{"defaultViewers": {"markdown": "Jupytext Notebook"}}
+{
+  "@jupyterlab/docmanager-extension:plugin": {
+       "defaultViewers": {
+      "markdown": "Jupytext Notebook"
+    }
+  }
+}
