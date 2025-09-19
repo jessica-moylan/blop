@@ -8,6 +8,7 @@ dependencies:
   - area-detector-handlers
   - ax-platform
   - bluesky[base]
+  - notebook
   - jupytext
   - matplotlib-base
   - jupyterlab
