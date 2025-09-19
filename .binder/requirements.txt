@@ -2,7 +2,7 @@ area-detector-handlers
 ax-platform
 bluesky[base]
 jupytext
-matplotlib-base
+matplotlib
 databroker
 tiled[server,minimal-client]
 h5py
