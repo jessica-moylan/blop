@@ -119,18 +119,6 @@ local_test = {cmd = "pixi run -e docs bash ./docs/test.sh"}
 
 [feature.docs.tasks]
 test = {cmd="bash ./docs/test.sh"}
-setup_wasm = {cmd = "pixi install -e jupyterlite-runtime", inputs = ["pixi.lock"]}
-convert_ipynbs = {cmd = "bash docs/convert_all_jupyterlite.sh", inputs = ["docs/"], outputs = ["docs/build/ipynbs"]}
-
-[feature.docs.tasks.build_wasm]
-cmd = "jupyter lite build --XeusAddon.prefix=.pixi/envs/jupyterlite-runtime --contents docs/build/ipynbs --output-dir docs/build/html/jupyterlite --settings-overrides=.binder/overrides.json --log-level DEBUG"
-depends-on = ["setup_wasm", "convert_ipynbs"]
-outputs = ["docs/build/html/jupyterlite/"]
-inputs = ["pixi.lock", "tutorials/"]
-
-[feature.docs.tasks.start_wasm]
-cmd = "python -m http.server 8000 -d docs/build/html/jupyterlite/"
-depends-on = ["build_wasm"]
 
 [feature.dev.activation]
 # Workaround overrides JupyterLab configuration (at the environment level) to

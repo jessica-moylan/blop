@@ -47,9 +47,6 @@ jobs:
       - name: Build Docs
         run: make -C docs/ html
 
-      # - name: Build jupyterlite
-      #   run: pixi run build_wasm
-
       - name: Upload JupyterLite docs artifact
         uses: actions/upload-artifact@v4
         with:

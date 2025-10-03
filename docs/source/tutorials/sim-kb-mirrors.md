@@ -6,9 +6,9 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.17.3
 kernelspec:
-  display_name: dev
-  language: python
   name: python3
+  display_name: Python 3 (ipykernel)
+  language: python
 ---
 
 # Simulated KB Mirror Demo
@@ -199,7 +199,6 @@ uid = RE(list_scan([beamline.det], *scan_motor_params))
 ```
 
 ```{code-cell} ipython3
-
 image = db[uid[0]]["streams"]["primary"]["bl_det_image"].read().squeeze()
 plt.imshow(image)
 plt.colorbar()
