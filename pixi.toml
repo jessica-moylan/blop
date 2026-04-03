@@ -33,6 +33,7 @@ tests = "pytest src/blop/tests"
 [feature.docs.pypi-dependencies]
 blop = { path = ".", editable = true, extras = ["cpu"] }
 blop-sim = { path = "sim", editable = true }
+xrt = { git = "https://github.com/kklmn/xrt.git", branch = "new_glow" }
 numpydoc = "*"
 sphinx-copybutton = "*"
 myst-nb = "*"
