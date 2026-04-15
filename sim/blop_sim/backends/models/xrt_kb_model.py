@@ -25,6 +25,10 @@ limits = [[-0.6, 0.6], [-0.45, 0.45]]
 def build_histRGB(lb, gb, limits=None, isScreen=False, shape=None):
     if shape is None:
         shape = [256, 256]
+
+    # state = 1 - means reflection happened inside the optical limits
+    # state = 2 - same within physical limits
+    # state = 3 - went over
     good = (lb.state == 1) | (lb.state == 2)
     if isScreen:
         x, y, z = lb.x[good], lb.z[good], lb.y[good]

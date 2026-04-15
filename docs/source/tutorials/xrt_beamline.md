@@ -50,10 +50,11 @@ import xrt.runner as xrtrun
 
 
 # Simulation back-end for the BioXAS-Main beamline
-from blop_sim.backends.xrt import XRTBackend
-from blop_sim.devices.xrt import KBMirror
-from blop_sim.devices.slit import SlitDevice
+from blop_sim.backends.simple import SimBackend
+from blop_sim.devices.xrt import DBHR, Slit, KBMirror
 from blop_sim.devices import DetectorDevice
+
+import pdb
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 plt.ion()
@@ -160,7 +161,7 @@ def build_beamline():
         bl=BioXAS_Main,
         name=r"Wiggler",
         center=[0, 0, 0],
-        nrays=200000,
+        nrays=1500000,
         eE=2.9,
         eI=0.25,
         eSigmaX=405.84479792157003,
@@ -225,7 +226,7 @@ def build_beamline():
     BioXAS_Main.CM_Slits = rapts.RectangularAperture(
         bl=BioXAS_Main,
         name=r"CM_Slits",
-        center=[0, 15600, r"auto"],
+        center=[0, 15600, 5.378324617301544],
         opening=[-5.0, 5.0, -2.0, 2.0],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0])
@@ -233,7 +234,7 @@ def build_beamline():
     BioXAS_Main.SSRL_DCM = raycing.oes.DCM(
         bl=BioXAS_Main,
         name=r"SSRL_DCM",
-        center=[0, 25300, r"auto"],
+        center=[0, 25300, 56.172806077564246],
         bragg=[8000],
         material=Si220,
         material2=Si220,
@@ -251,7 +252,7 @@ def build_beamline():
     BioXAS_Main.PreM2Screen = rscreens.Screen(
         bl=BioXAS_Main,
         name=r"PreM2Screen",
-        center=[0, 26000, r"auto"],
+        center=[0, 26000, 71.73657379831323],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0],
         limPhysX=[0.0, 0.0],
@@ -261,7 +262,7 @@ def build_beamline():
     BioXAS_Main.Mirror2 = roes.ToroidMirror(
         bl=BioXAS_Main,
         name=r"Mirror2",
-        center=[0, 26900, r"auto"],
+        center=[0, 26900, 76.44962311674786],
         pitch=r"-0.15 degree",
         positionRoll=3.141592653589793,
         material=RhOnSi,
@@ -274,7 +275,7 @@ def build_beamline():
     BioXAS_Main.PhotonShutter = rapts.RectangularAperture(
         bl=BioXAS_Main,
         name=r"PhotonShutter",
-        center=[0, 28300, r"auto"],
+        center=[0, 28300, 76.32517494206057],
         opening=[-5.0, 5.0, -2.0, 2.0],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0])
@@ -282,7 +283,7 @@ def build_beamline():
     BioXAS_Main.DBHR1 = raycing.oes.OE(
         bl=BioXAS_Main,
         name=r"DBHR1",
-        center=[0, 29900, r"auto"],
+        center=[0, 29900, 76.42861713167648], 
         pitch=r"0.2 deg",
         material=CVDcoating,
         limPhysX=[-10.0, 10.0],
@@ -294,7 +295,7 @@ def build_beamline():
     BioXAS_Main.DBHR2 = raycing.oes.OE(
         bl=BioXAS_Main,
         name=r"DBHR2",
-        center=[0, 30075, r"auto"],
+        center=[0, 30075, 77.61464367739664],
         pitch=r"-0.2 deg",
         positionRoll=3.141592653589793,
         material=CVDcoating,
@@ -307,7 +308,7 @@ def build_beamline():
     BioXAS_Main.JJslits = rapts.RectangularAperture(
         bl=BioXAS_Main,
         name=r"JJslits",
-        center=[0, 30350, r"auto"],
+        center=[0, 30350, 77.63364600960998],
         opening=[-5.0, 5.0, -0.2, 0.2],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0])
@@ -315,7 +316,7 @@ def build_beamline():
     BioXAS_Main.SampleScreen = rscreens.Screen(
         bl=BioXAS_Main,
         name=r"SampleScreen",
-        center=[0, 30650, r"auto"],
+        center=[0, 30650, 77.63884281299194],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0],
         limPhysX=[0.0, 0.0],### Checking Optimization Health
@@ -370,7 +371,6 @@ def run_process(BioXAS_Main):
     SampleScreen_local = BioXAS_Main.SampleScreen.expose(
         beam=DBHR2_global)
 
-    #TODO: at this point there is data within the screens (SampleScreen_local and DBHR2_global) stored within the .x, .y, .z parameters
     outDict = {
         'Wiggler_global': Wiggler_global,
         'FEMask_local': FEMask_local,
@@ -398,7 +398,7 @@ def run_process(BioXAS_Main):
 ```
 
 ```{code-cell} ipython3
-class CustomXRTBackend(XRTBackend):
+class CustomXRTBackend(SimBackend):
     def __init__(self, noise: bool = False):
         """Initialize XRT backend."""
         super().__init__()
@@ -412,24 +412,19 @@ class CustomXRTBackend(XRTBackend):
 
     async def generate_beam(self):
         self._ensure_beamline()
-        mirror_radii = await self._get_mirror_radii()
-        cm_slits_opening = await self._get_slit_state()
-        print(cm_slits_opening)
-        self._beamline.Mirror1.R = mirror_radii[0]
-        self._beamline.Mirror2.R = mirror_radii[1]
-        self._beamline.CM_Slits.opening = list(cm_slits_opening.values())
-        print(f'self._beamline.CM_Slits.opening = {self._beamline.CM_Slits.opening}')
-
+        dbhr_info = await self._get_dbhr_information()
+        mirror_radius = await self._get_mirror_radii()
+        cm_slit = await self._get_cmslit_center()
+        self._beamline.DBHR1.center[2] = dbhr_info[0]
+        self._beamline.DBHR2.center[2] = dbhr_info[1]
+        self._beamline.Mirror1.R = mirror_radius[0]
+        self._beamline.Mirror2.R = mirror_radius[1]
+        self._beamline.CM_Slits.center[2] = cm_slit
         out = run_process(self._beamline)
 
-        #TODO: the data is also here too
         lb = out["SampleScreen_local"]
-        gb = out["DBHR2_global"]
 
-        print(f"Generated beam with Mirror1 R={self._beamline.Mirror1.R}, Mirror2 R={self._beamline.Mirror2.R}")
-        print("~~~~~~~~~~~ just before builRGB")
-        #TODO: somehow in this function the data gets wiped? 
-        hist2d, _, _ = build_histRGB(lb, gb, limits=self._limits, isScreen=True, shape=[400, 300]  )
+        hist2d, _, _ = build_histRGB(lb, lb, isScreen=True, shape=[400, 300]  )
         image = hist2d
 
         if self._noise:
@@ -437,63 +432,38 @@ class CustomXRTBackend(XRTBackend):
             image += 1e-3 * np.abs(np.random.standard_normal(size=image.shape))
         return image
     
-    async def _get_slit_state(self) -> list[float]:
+    async def _get_dbhr_information(self) -> list[float,float]:
+        dbhr_information = [76.42861713167648, 77.61464367739664]
+        for name, device in self._device_states.items():
+            if device["type"] == "oes_xrt":
+                state = await self._get_device_state(name)
+        return dbhr_information
+    
+    async def _get_cmslit_center(self) -> float:
+        dbhr_information = 5.378324617301544
+        for name, device in self._device_states.items():
+            if device["type"] == "slit_xrt":
+                state = await self._get_device_state(name)
+        return dbhr_information
+    
+    async def _get_mirror_radii(self) -> list[float]:
         """Get KB mirror radii from registered devices.
 
         Returns:
             [R1, R2] where R1 is first mirror (vertical), R2 is second mirror (horizontal)
         """
-        # Default CM_slit opening
-        state = [-5.0, 5.0, -2.0, 2.0]
+        # Default radii from xrt_kb_model.py
+        radii = [7120000.0, 2500000.0]
 
         for name, device in self._device_states.items():
-            if device["type"] == "slit":
+            if device["type"] == "kb_mirror_xrt":
                 state = await self._get_device_state(name)
-                print(f'state ----------- {state}')
-                # mirror_index = state["mirror_index"]
-                # radius = state["radius"]
-                # if mirror_index < len(radii):
-                #     radii[mirror_index] = radius
+                mirror_index = state["mirror_index"]
+                radius = state["radius"]
+                if mirror_index < len(radii):
+                    radii[mirror_index] = radius
 
-        return state
-```
-
-```{code-cell} ipython3
-M1_R_BOUNDS = (6000000, 8500000) 
-
-# CM_Slits 
-CM_H_BOUNDS  = (2.0, 10.0)   # full horizontal opening 
-CM_V_BOUNDS  = (0.5,  4.0)   # full vertical opening  
-
-M2_R_BOUNDS = (1_500_000, 3_500_000)  
-
-backend = CustomXRTBackend()
-
-cm_slits = SlitDevice(backend, name="cm_slits")
-
-det = DetectorDevice(backend, StaticPathProvider(UUIDFilenameProvider(), PurePath(DETECTOR_STORAGE)), name="det")
-
-mirror1 = KBMirror(backend, mirror_index=1, initial_radius=6055000, name="mirror1")
-mirror2 = KBMirror(backend, mirror_index=2, initial_radius=6550000, name="mirror2")
-```
-
-```{code-cell} ipython3
-dofs = [
-    RangeDOF(actuator=mirror1.radius,      bounds=M1_R_BOUNDS, parameter_type="float"),
-    RangeDOF(actuator=cm_slits.inboard, bounds=CM_H_BOUNDS, parameter_type="float"),
-    RangeDOF(actuator=cm_slits.outboard, bounds=CM_H_BOUNDS, parameter_type="float"),
-    RangeDOF(actuator=cm_slits.lower, bounds=CM_H_BOUNDS, parameter_type="float"),
-    RangeDOF(actuator=cm_slits.upper, bounds=CM_H_BOUNDS, parameter_type="float"),
-    RangeDOF(actuator=mirror2.radius,      bounds=M2_R_BOUNDS, parameter_type="float"),
-]
-```
-
-```{code-cell} ipython3
-objectives = [
-    Objective(name="intensity", minimize=False),
-    Objective(name="width", minimize=True),
-    Objective(name="height", minimize=True),
-]
+        return radii
 ```
 
 ```{code-cell} ipython3
@@ -523,7 +493,7 @@ class BioXASEvaluation(EvaluationFunction):
         max_val = np.max(blurred)
         if max_val == 0:
             return 0.0, 0.0, 0.0
-
+ 
         thresh_value = 0.2 * max_val
         _, thresh = cv2.threshold(blurred, thresh_value, 255, cv2.THRESH_TOZERO)
 
@@ -559,7 +529,7 @@ class BioXASEvaluation(EvaluationFunction):
             s["_id"]
             for s in run1.metadata["start"]["blop_suggestions"]
         ]
-        print("~~~~~~~~~~~~~~~~ enter call")
+
         for idx, sid in enumerate(suggestion_ids):
             intensity, width, height = self._compute_stats(images[idx])
             outcomes.append(
@@ -575,6 +545,42 @@ class BioXASEvaluation(EvaluationFunction):
 ```
 
 ```{code-cell} ipython3
+DBHR1_PITCH_BOUNDS = (0,39900)
+DBHR2_PITCH_BOUNDS = (0, 49900)
+VERTICAL_BOUNDS = (25000, 5000000)    # Optimal ~38000 is in upper portion
+HORIZONTAL_BOUNDS = (25000, 5000000)   # Optimal ~21000 is in lower portion
+CM_SLIT_BOUNDS = (0,200)
+
+# DBHR1_PITCH_BOUNDS = (-0.5,0.5)
+# DBHR2_PITCH_BOUNDS = (-0.5,0.5)
+# VERTICAL_BOUNDS = (-0.5,0.5)    # Optimal ~38000 is in upper portion
+# HORIZONTAL_BOUNDS = (-0.5,0.5)   # Optimal ~21000 is in lower portion
+# CM_SLIT_BOUNDS = (-0.5,0.5)
+
+backend = CustomXRTBackend()
+
+det = DetectorDevice(backend, StaticPathProvider(UUIDFilenameProvider(), PurePath(DETECTOR_STORAGE)), name="det")
+dbhr1 = DBHR(backend, optic_index=1, center=77, name = "dbhr1")
+dbhr2 = DBHR(backend, optic_index=2, center=77, name = "dbhr2")
+mirror1 = KBMirror(backend, mirror_index=1, initial_radius=2500000, name="mirror1")
+mirror2 = KBMirror(backend, mirror_index=2, initial_radius=2500000, name="mirror2")
+cmslit = Slit(backend, center= 0.0, name = "cmslit")
+
+dofs = [
+    RangeDOF(actuator=dbhr1.center, bounds = DBHR1_PITCH_BOUNDS, parameter_type = "float"),
+    RangeDOF(actuator=dbhr2.center, bounds = DBHR2_PITCH_BOUNDS, parameter_type = "float"),
+    RangeDOF(actuator=mirror1.radius, bounds=VERTICAL_BOUNDS, parameter_type="float"),
+    RangeDOF(actuator=mirror2.radius, bounds=HORIZONTAL_BOUNDS, parameter_type="float"),
+    RangeDOF(actuator=cmslit.center, bounds = CM_SLIT_BOUNDS, parameter_type = "float"),
+]
+
+
+objectives = [
+    Objective(name="intensity", minimize=False),
+    Objective(name="width", minimize=True),
+    Objective(name="height", minimize=True)
+]
+
 agent = Agent(
     sensors=[det],
     dofs=dofs,
@@ -587,15 +593,55 @@ agent = Agent(
 ```
 
 ```{code-cell} ipython3
-RE(agent.optimize(15))
+RE(agent.optimize(25))
 ```
 
 ```{code-cell} ipython3
 ### Checking Optimization Health
 
-agent.ax_client.compute_analyses()
+# agent.ax_client.compute_analyses()
 ```
 
 ```{code-cell} ipython3
 agent.ax_client.summarize()
+```
+
+```{code-cell} ipython3
+RE(agent.optimize(35))
+```
+
+```{code-cell} ipython3
+# agent.ax_client._experiment.parameters
+```
+
+```{code-cell} ipython3
+_ = agent.plot_objective(x_dof_name="dbhr1-center", y_dof_name="dbhr2-center", objective_name="intensity")
+```
+
+```{code-cell} ipython3
+optimal_parameters = next(iter(agent.ax_client.get_pareto_frontier()))[0]
+optimal_parameters
+
+# optimal_parameters = agent.ax_client.get_best_parameterization()[0]
+```
+
+```{code-cell} ipython3
+from bluesky.plans import list_scan
+
+uid = RE(list_scan(
+    [det],
+    dbhr1.center, [optimal_parameters[dbhr1.center.name]],
+    dbhr2.center, [optimal_parameters[dbhr2.center.name]],
+    mirror1.radius, [optimal_parameters[mirror1.radius.name]],
+    mirror2.radius, [optimal_parameters[mirror2.radius.name]],
+    cmslit.center, [optimal_parameters[cmslit.center.name]],
+))
+
+```
+
+```{code-cell} ipython3
+image = tiled_client[uid[0]]["primary/det_image"].read().squeeze()
+plt.imshow(image)
+plt.colorbar()
+plt.show()
 ```
