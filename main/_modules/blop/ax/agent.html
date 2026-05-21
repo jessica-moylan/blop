@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>blop.ax.agent &#8212; blop 0.1.dev657 documentation</title>
+    <title>blop.ax.agent &#8212; blop 0.1.dev668 documentation</title>
   
   
   
@@ -42,15 +42,451 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=b5b31b73"></script>
+    <script src="../../../_static/documentation_options.js?v=f0f9c87d"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/blop/ax/agent';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.18.0';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://bluesky.github.io/blop/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://blueskyproject.io/blop/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'main';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -62,7 +498,7 @@
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev657" />
+  <meta name="docsearch:version" content="0.1.dev668" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -463,10 +899,11 @@
   <h1>Source code for blop.ax.agent</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Future</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cast</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">ax</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ax</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">TOutcome</span><span class="p">,</span> <span class="n">TParameterization</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ax.analysis.plotly.surface.contour</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContourPlot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ax.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TParamValue</span>
 
@@ -484,6 +921,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..callbacks.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizationLogger</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..callbacks.router</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizationCallbackRouter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..plan_stubs</span><span class="w"> </span><span class="kn">import</span> <span class="n">navigate_to_best</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..plans</span><span class="w"> </span><span class="kn">import</span> <span class="n">acquire_baseline</span><span class="p">,</span> <span class="n">optimize</span><span class="p">,</span> <span class="n">sample_suggestions</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..protocols</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AcquisitionPlan</span><span class="p">,</span>
@@ -493,7 +931,7 @@
     <span class="n">QueueserverOptimizationProblem</span><span class="p">,</span>
     <span class="n">Sensor</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..queueserver</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueueserverClient</span><span class="p">,</span> <span class="n">QueueserverOptimizationRunner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..queueserver</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptimizationResult</span><span class="p">,</span> <span class="n">QueueserverClient</span><span class="p">,</span> <span class="n">QueueserverOptimizationRunner</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">InferredReadable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.dof</span><span class="w"> </span><span class="kn">import</span> <span class="n">DOF</span><span class="p">,</span> <span class="n">DOFConstraint</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.objective</span><span class="w"> </span><span class="kn">import</span> <span class="n">Objective</span><span class="p">,</span> <span class="n">OutcomeConstraint</span><span class="p">,</span> <span class="n">ScalarizedObjective</span><span class="p">,</span> <span class="n">to_ax_objective_str</span>
@@ -529,8 +967,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        fixed_dofs : dict[DOF, Any] | dict[str, Any] | None</span>
-<span class="sd">            A mapping of DOFs or DOF names to the values they should be fixed to.</span>
+<span class="sd">        fixed_dofs : dict[DOF, Any] | None</span>
+<span class="sd">            A mapping of DOFs to the values they should be fixed to.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">fixed_dofs</span><span class="p">:</span>
@@ -583,6 +1021,27 @@
 <span class="sd">        For complete examples, see :doc:`/how-to-guides/attach-data-to-experiments`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">ingest</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_best_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TParameterization</span><span class="p">,</span> <span class="n">TOutcome</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a list of the optimal points found during optimization.</span>
+
+<span class="sd">        For single-objective optimization, returns a single best point.</span>
+<span class="sd">        For multi-objective optimization, returns the Pareto-optimal set.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[tuple[int, TParameterization, TOutcome]]</span>
+<span class="sd">            Each element in the list is a tuple of:</span>
+<span class="sd">              - trial index (int)</span>
+<span class="sd">              - parameter values (dict)</span>
+<span class="sd">              - metric values (dict, where values may be (value, sem) tuples)</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        navigate_to_best : Plan stub to move actuators to a best point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">get_best_points</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_objective</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x_dof_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y_dof_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">objective_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
@@ -988,10 +1447,49 @@
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="k">yield from</span> <span class="n">sample_suggestions_plan</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Agent.navigate_to_best">
+<a class="viewcode-back" href="../../../reference/agent.html#blop.ax.Agent.navigate_to_best">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">navigate_to_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameterization</span><span class="p">:</span> <span class="n">Mapping</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MsgGenerator</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move actuators to the best point found during optimization.</span>
+
+<span class="sd">        If no explicit parameterization is provided, queries the optimizer for its</span>
+<span class="sd">        best point(s). For multi-objective optimizers that return multiple Pareto-optimal</span>
+<span class="sd">        points, an explicit parameterization must be provided.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parameterization : Mapping | None, optional</span>
+<span class="sd">            Explicit parameterization to navigate to. If None, queries the optimizer&#39;s</span>
+<span class="sd">            best point. For multi-objective problems, call ``get_best_points()``</span>
+<span class="sd">            to inspect the Pareto set and select one.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the optimizer returns multiple Pareto-optimal points and no</span>
+<span class="sd">            explicit ``parameterization`` is provided.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_best_points : Query the optimizer for best points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">optimization_problem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_optimization_problem</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="k">yield from</span> <span class="n">navigate_to_best</span><span class="p">(</span>
+                <span class="n">optimization_problem</span><span class="o">.</span><span class="n">actuators</span><span class="p">,</span>
+                <span class="n">optimization_problem</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span>
+                <span class="n">parameterization</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
 </div>
 
 
 
+<div class="viewcode-block" id="QueueserverAgent">
+<a class="viewcode-back" href="../../../reference/agent.html#blop.ax.QueueserverAgent">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">QueueserverAgent</span><span class="p">(</span><span class="n">_AxAgentMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An asynchronous interface that uses Ax as the backend for optimization and experiment tracking</span>
@@ -1032,7 +1530,7 @@
 <span class="sd">    blop.ax.dof.ChoiceDOF : For discrete parameters.</span>
 <span class="sd">    blop.ax.objective.Objective : For defining objectives.</span>
 <span class="sd">    blop.ax.optimizer.AxOptimizer : The optimizer used internally.</span>
-<span class="sd">    blop.queueserver.QueueservverOptimizatonRunner : Runner that handles interaction with bluesky-queueserver.</span>
+<span class="sd">    blop.queueserver.QueueserverOptimizatonRunner : Runner that handles interaction with bluesky-queueserver.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -1047,6 +1545,7 @@
         <span class="n">dof_constraints</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">DOFConstraint</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_constraints</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">OutcomeConstraint</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">checkpoint_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">acquisition_plan_kwargs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sensors</span> <span class="o">=</span> <span class="n">sensors</span>
@@ -1059,6 +1558,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_actuators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dof</span><span class="o">.</span><span class="n">actuator</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_evaluation_function</span> <span class="o">=</span> <span class="n">evaluation_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_plan</span> <span class="o">=</span> <span class="n">acquisition_plan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_plan_kwargs</span> <span class="o">=</span> <span class="n">acquisition_plan_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="n">AxOptimizer</span><span class="p">(</span>
             <span class="n">parameters</span><span class="o">=</span><span class="p">[</span><span class="n">dof</span><span class="o">.</span><span class="n">to_ax_parameter_config</span><span class="p">()</span> <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">],</span>
             <span class="n">objective</span><span class="o">=</span><span class="n">to_ax_objective_str</span><span class="p">(</span><span class="n">objectives</span><span class="p">),</span>
@@ -1090,6 +1590,18 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">acquisition_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_plan</span>
 
+<div class="viewcode-block" id="QueueserverAgent.stop">
+<a class="viewcode-back" href="../../../reference/agent.html#blop.ax.QueueserverAgent.stop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">current_iteration</span>
+
+<div class="viewcode-block" id="QueueserverAgent.to_optimization_problem">
+<a class="viewcode-back" href="../../../reference/agent.html#blop.ax.QueueserverAgent.to_optimization_problem">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_optimization_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueueserverOptimizationProblem</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">QueueserverOptimizationProblem</span><span class="p">(</span>
             <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">,</span>
@@ -1097,9 +1609,13 @@
             <span class="n">sensors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sensors</span><span class="p">,</span>
             <span class="n">evaluation_function</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_evaluation_function</span><span class="p">,</span>
             <span class="n">acquisition_plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_plan</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="n">acquisition_plan_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_acquisition_plan_kwargs</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="QueueserverAgent.run">
+<a class="viewcode-back" href="../../../reference/agent.html#blop.ax.QueueserverAgent.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Future</span><span class="p">[</span><span class="n">OptimizationResult</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Start the optimization loop.</span>
 
@@ -1111,8 +1627,16 @@
 <span class="sd">        ----------</span>
 <span class="sd">        iterations : int</span>
 <span class="sd">            Number of optimization iterations to run.</span>
-<span class="sd">        num_points : int</span>
+<span class="sd">        n_points : int</span>
 <span class="sd">            Number of points to suggest per iteration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        concurrent.futures.Future[OptimizationResult]</span>
+<span class="sd">            A future that resolves to an :class:`~blop.queueserver.OptimizationResult`</span>
+<span class="sd">            when all iterations complete or when :meth:`stop` is called. If an</span>
+<span class="sd">            unhandled exception occurs the future will hold it and re-raise on</span>
+<span class="sd">            ``.result()``.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -1121,10 +1645,12 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If required devices or plans are not available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span></div>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">submit_suggestions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suggestions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="QueueserverAgent.submit_suggestions">
+<a class="viewcode-back" href="../../../reference/agent.html#blop.ax.QueueserverAgent.submit_suggestions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit_suggestions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suggestions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Future</span><span class="p">[</span><span class="n">OptimizationResult</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Evaluate specific parameter combinations.</span>
 
@@ -1136,11 +1662,19 @@
 <span class="sd">        suggestions : list[dict]</span>
 <span class="sd">            Either optimizer suggestions (with &quot;_id&quot;) or manual points (without &quot;_id&quot;).</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        concurrent.futures.Future[OptimizationResult]</span>
+<span class="sd">            A future that resolves to an :class:`~blop.queueserver.OptimizationResult`</span>
+<span class="sd">            when the acquisition completes.</span>
+
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        suggest : Get optimizer suggestions.</span>
+<span class="sd">        run : Run the full optimization loop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">submit_suggestions</span><span class="p">(</span><span class="n">suggestions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">submit_suggestions</span><span class="p">(</span><span class="n">suggestions</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
                 </article>
