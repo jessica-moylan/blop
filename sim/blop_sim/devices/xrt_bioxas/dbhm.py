@@ -49,7 +49,7 @@ class DBHR(StandardReadable):
         return {
             "optic_index": self._optic_index,
             "extraPitch": await self.extraPitch.get_value(),
-            "extraRoll": await self.extraRoll.get_value(),  
+            "extraRoll": await self.extraRoll.get_value(),
         }
 
 

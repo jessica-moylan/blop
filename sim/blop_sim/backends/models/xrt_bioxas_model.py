@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 
 __author__ = "Konstantin Klementiev", "Roman Chernikov"
@@ -10,22 +9,18 @@ Created with xrtQook
 None
 
 """
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 
 import numpy as np
-
-import xrt.backends.raycing.sources as rsources
-import xrt.backends.raycing.screens as rscreens
-import xrt.backends.raycing.materials as rmats
-import xrt.backends.raycing.materials.elemental as rmatsel
-import xrt.backends.raycing.materials.compounds as rmatsco
-import xrt.backends.raycing.materials.crystals as rmatscr
-import xrt.backends.raycing.oes as roes
-import xrt.backends.raycing.apertures as rapts
-import xrt.backends.raycing.run as rrun
 import xrt.backends.raycing as raycing
+import xrt.backends.raycing.apertures as rapts
+import xrt.backends.raycing.materials as rmats
+import xrt.backends.raycing.oes as roes
+import xrt.backends.raycing.run as rrun
+import xrt.backends.raycing.screens as rscreens
 import xrt.plotter as xrtplot
 import xrt.runner as xrtrun
+
 
 def build_histRGB(lb, gb, limits=None, isScreen=False, shape=None):
     if shape is None:
@@ -49,55 +44,29 @@ def build_histRGB(lb, gb, limits=None, isScreen=False, shape=None):
         hist2dRGB = None
     return hist2d, hist2dRGB, limits
 
-CVD = rmats.Material(
-    elements=['C'],
-    quantities=[1.0],
-    kind=r"plate",
-    rho=3.52,
-    name=r"CVD")
 
-Rh = rmats.Material(
-    elements=['Rh'],
-    quantities=[1.0],
-    kind=r"mirror",
-    rho=12.41,
-    name=r"Rh")
+CVD = rmats.Material(elements=["C"], quantities=[1.0], kind=r"plate", rho=3.52, name=r"CVD")
+
+Rh = rmats.Material(elements=["Rh"], quantities=[1.0], kind=r"mirror", rho=12.41, name=r"Rh")
 
 Si220 = rmats.CrystalSi(
     a=5.4307717932001225,
     hkl=[2, 2, 0],
     d=1.9200677810242166,
     V=160.17128543981727,
-    elements=['Si'],
+    elements=["Si"],
     quantities=[1.0],
     name=r"Si220",
-    kind=r"crystal")
+    kind=r"crystal",
+)
 
-CVDcoating = rmats.Material(
-    elements=['C'],
-    quantities=[1.0],
-    kind=r"mirror",
-    rho=3.52,
-    name=r"CVDcoating")
+CVDcoating = rmats.Material(elements=["C"], quantities=[1.0], kind=r"mirror", rho=3.52, name=r"CVDcoating")
 
-Si = rmats.Material(
-    elements=['Si'],
-    quantities=[1.0],
-    kind=r"mirror",
-    rho=2.33,
-    name=r"Si")
+Si = rmats.Material(elements=["Si"], quantities=[1.0], kind=r"mirror", rho=2.33, name=r"Si")
 
-RhOnSi = rmats.Coated(
-    coating=Rh,
-    surfaceRoughness=2,
-    substrate=Si,
-    name=r"RhOnSi")
+RhOnSi = rmats.Coated(coating=Rh, surfaceRoughness=2, substrate=Si, name=r"RhOnSi")
 
-CVDonSi = rmats.Coated(
-    coating=CVDcoating,
-    surfaceRoughness=2,
-    substrate=Si,
-    name=r"CVDonSi")
+CVDonSi = rmats.Coated(coating=CVDcoating, surfaceRoughness=2, substrate=Si, name=r"CVDonSi")
 
 Si220harm = rmats.CrystalHarmonics(
     Nmax=2,
@@ -112,15 +81,15 @@ Si220harm = rmats.CrystalHarmonics(
     atomsFraction=[1, 1, 1, 1, 1, 1, 1, 1],
     d=1.916079064786341,
     V=159.1751463370933,
-    elements=['Si', 'Si', 'Si', 'Si', 'Si', 'Si', 'Si', 'Si'],
+    elements=["Si", "Si", "Si", "Si", "Si", "Si", "Si", "Si"],
     quantities=[1, 1, 1, 1, 1, 1, 1, 1],
     rho=2.3439368026411915,
-    kind=r"crystal harmonics")
+    kind=r"crystal harmonics",
+)
+
 
 def build_beamline():
-    BioXAS_Main = raycing.BeamLine(
-        alignE=8000,
-        name=r"BioXAS_Main")
+    BioXAS_Main = raycing.BeamLine(alignE=8000, name=r"BioXAS_Main")
 
     BioXAS_Main.Wiggler = raycing.sources.synchr.Wiggler(
         bl=BioXAS_Main,
@@ -144,7 +113,8 @@ def build_beamline():
         period=150,
         n=11,
         nx=51,
-        nz=51)
+        nz=51,
+    )
 
     BioXAS_Main.FEMask = rapts.RectangularAperture(
         bl=BioXAS_Main,
@@ -152,7 +122,8 @@ def build_beamline():
         center=[0, 12000, 0],
         opening=[-12.0, 12.0, -1.75, 1.75],
         x=[1.0, -0.0, 0.0],
-        z=[0.0, 0.0, 1.0])
+        z=[0.0, 0.0, 1.0],
+    )
 
     BioXAS_Main.DiamondFilter = roes.Plate(
         bl=BioXAS_Main,
@@ -164,7 +135,8 @@ def build_beamline():
         limOptX=[-5, 5],
         limPhysY=[-5.0, 5.0],
         limOptY=[-5, 5],
-        t=0.05)
+        t=0.05,
+    )
 
     BioXAS_Main.WhiteBeamSlits = rapts.RectangularAperture(
         bl=BioXAS_Main,
@@ -172,7 +144,8 @@ def build_beamline():
         center=[0, 14000, 0],
         opening=[-10.0, 10.0, -1.0, 1.0],
         x=[1.0, -0.0, 0.0],
-        z=[0.0, 0.0, 1.0])
+        z=[0.0, 0.0, 1.0],
+    )
 
     BioXAS_Main.Mirror1 = roes.ToroidMirror(
         bl=BioXAS_Main,
@@ -186,7 +159,8 @@ def build_beamline():
         limOptY=[-495, 495],
         order=1,
         R=7120000.0,
-        r=69.81)
+        r=69.81,
+    )
 
     BioXAS_Main.CM_Slits = rapts.RectangularAperture(
         bl=BioXAS_Main,
@@ -194,7 +168,8 @@ def build_beamline():
         center=[0, 15600, r"auto"],
         opening=[-5.0, 5.0, -2.0, 2.0],
         x=[1.0, -0.0, 0.0],
-        z=[0.0, 0.0, 1.0])
+        z=[0.0, 0.0, 1.0],
+    )
 
     BioXAS_Main.SSRL_DCM = raycing.oes.DCM(
         bl=BioXAS_Main,
@@ -212,7 +187,8 @@ def build_beamline():
         limOptX2=[-20, 20],
         limOptY2=[-1.1951, 94.0549],
         order=1,
-        cryst2perpTransl=6.5023)
+        cryst2perpTransl=6.5023,
+    )
 
     BioXAS_Main.PreM2Screen = rscreens.Screen(
         bl=BioXAS_Main,
@@ -222,7 +198,8 @@ def build_beamline():
         z=[0.0, 0.0, 1.0],
         limPhysX=[0.0, 0.0],
         limPhysY=[0.0, 0.0],
-        cLimits=[0.0, 0.0])
+        cLimits=[0.0, 0.0],
+    )
 
     BioXAS_Main.Mirror2 = roes.ToroidMirror(
         bl=BioXAS_Main,
@@ -235,7 +212,8 @@ def build_beamline():
         limOptY=[-550, 550],
         order=1,
         R=2500000.0,
-        r=35.9)
+        r=35.9,
+    )
 
     BioXAS_Main.PhotonShutter = rapts.RectangularAperture(
         bl=BioXAS_Main,
@@ -243,7 +221,8 @@ def build_beamline():
         center=[0, 28300, r"auto"],
         opening=[-5.0, 5.0, -2.0, 2.0],
         x=[1.0, -0.0, 0.0],
-        z=[0.0, 0.0, 1.0])
+        z=[0.0, 0.0, 1.0],
+    )
 
     BioXAS_Main.DBHR1 = raycing.oes.OE(
         bl=BioXAS_Main,
@@ -255,7 +234,8 @@ def build_beamline():
         limOptX=[-10, 10],
         limPhysY=[-75.0, 75.0],
         limOptY=[-75, 75],
-        order=1)
+        order=1,
+    )
 
     BioXAS_Main.DBHR2 = raycing.oes.OE(
         bl=BioXAS_Main,
@@ -268,7 +248,8 @@ def build_beamline():
         limOptX=[-10, 10],
         limPhysY=[-75.0, 75.0],
         limOptY=[-75, 75],
-        order=1)
+        order=1,
+    )
 
     BioXAS_Main.JJslits = rapts.RectangularAperture(
         bl=BioXAS_Main,
@@ -276,7 +257,8 @@ def build_beamline():
         center=[0, 30350, r"auto"],
         opening=[-5.0, 5.0, -0.2, 0.2],
         x=[1.0, -0.0, 0.0],
-        z=[0.0, 0.0, 1.0])
+        z=[0.0, 0.0, 1.0],
+    )
 
     BioXAS_Main.SampleScreen = rscreens.Screen(
         bl=BioXAS_Main,
@@ -286,7 +268,8 @@ def build_beamline():
         z=[0.0, 0.0, 1.0],
         limPhysX=[0.0, 0.0],
         limPhysY=[0.0, 0.0],
-        cLimits=[0.0, 0.0])
+        cLimits=[0.0, 0.0],
+    )
 
     return BioXAS_Main
 
@@ -294,161 +277,131 @@ def build_beamline():
 def run_process(BioXAS_Main):
     Wiggler_global = BioXAS_Main.Wiggler.shine()
 
-    FEMask_local = BioXAS_Main.FEMask.propagate(
-        beam=Wiggler_global)
+    FEMask_local = BioXAS_Main.FEMask.propagate(beam=Wiggler_global)
 
     DiamondFilter_global, DiamondFilter_local1, DiamondFilter_local2 = BioXAS_Main.DiamondFilter.double_refract(
-        beam=Wiggler_global,
-        returnLocalAbsorbed=0)
+        beam=Wiggler_global, returnLocalAbsorbed=0
+    )
 
-    WhiteBeamSlits_local = BioXAS_Main.WhiteBeamSlits.propagate(
-        beam=DiamondFilter_global)
+    WhiteBeamSlits_local = BioXAS_Main.WhiteBeamSlits.propagate(beam=DiamondFilter_global)
 
-    Mirror1_global, Mirror1_local = BioXAS_Main.Mirror1.reflect(
-        beam=DiamondFilter_global,
-        returnLocalAbsorbed=0)
+    Mirror1_global, Mirror1_local = BioXAS_Main.Mirror1.reflect(beam=DiamondFilter_global, returnLocalAbsorbed=0)
 
-    CM_Slits_local = BioXAS_Main.CM_Slits.propagate(
-        beam=Mirror1_global)
+    CM_Slits_local = BioXAS_Main.CM_Slits.propagate(beam=Mirror1_global)
 
-    SSRL_DCM_global, SSRL_DCM_local1, SSRL_DCM_local2 = BioXAS_Main.SSRL_DCM.double_reflect(
-        beam=Mirror1_global)
+    SSRL_DCM_global, SSRL_DCM_local1, SSRL_DCM_local2 = BioXAS_Main.SSRL_DCM.double_reflect(beam=Mirror1_global)
 
-    PreM2Screen_local = BioXAS_Main.PreM2Screen.expose(
-        beam=SSRL_DCM_global)
+    PreM2Screen_local = BioXAS_Main.PreM2Screen.expose(beam=SSRL_DCM_global)
 
-    Mirror2_global, Mirror2_local = BioXAS_Main.Mirror2.reflect(
-        beam=SSRL_DCM_global)
+    Mirror2_global, Mirror2_local = BioXAS_Main.Mirror2.reflect(beam=SSRL_DCM_global)
 
-    PhotonShutter_local = BioXAS_Main.PhotonShutter.propagate(
-        beam=Mirror2_global)
+    PhotonShutter_local = BioXAS_Main.PhotonShutter.propagate(beam=Mirror2_global)
 
-    DBHR1_global, DBHR1_local = BioXAS_Main.DBHR1.reflect(
-        beam=Mirror2_global)
+    DBHR1_global, DBHR1_local = BioXAS_Main.DBHR1.reflect(beam=Mirror2_global)
 
-    DBHR2_global, DBHR2_local = BioXAS_Main.DBHR2.reflect(
-        beam=DBHR1_global)
+    DBHR2_global, DBHR2_local = BioXAS_Main.DBHR2.reflect(beam=DBHR1_global)
 
-    JJslits_local = BioXAS_Main.JJslits.propagate(
-        beam=DBHR2_global)
+    JJslits_local = BioXAS_Main.JJslits.propagate(beam=DBHR2_global)
 
-    SampleScreen_local = BioXAS_Main.SampleScreen.expose(
-        beam=DBHR2_global)
+    SampleScreen_local = BioXAS_Main.SampleScreen.expose(beam=DBHR2_global)
 
     outDict = {
-        'Wiggler_global': Wiggler_global,
-        'FEMask_local': FEMask_local,
-        'DiamondFilter_global': DiamondFilter_global,
-        'DiamondFilter_local1': DiamondFilter_local1,
-        'DiamondFilter_local2': DiamondFilter_local2,
-        'WhiteBeamSlits_local': WhiteBeamSlits_local,
-        'Mirror1_global': Mirror1_global,
-        'Mirror1_local': Mirror1_local,
-        'CM_Slits_local': CM_Slits_local,
-        'SSRL_DCM_global': SSRL_DCM_global,
-        'SSRL_DCM_local1': SSRL_DCM_local1,
-        'SSRL_DCM_local2': SSRL_DCM_local2,
-        'PreM2Screen_local': PreM2Screen_local,
-        'Mirror2_global': Mirror2_global,
-        'Mirror2_local': Mirror2_local,
-        'PhotonShutter_local': PhotonShutter_local,
-        'DBHR1_global': DBHR1_global,
-        'DBHR1_local': DBHR1_local,
-        'DBHR2_global': DBHR2_global,
-        'DBHR2_local': DBHR2_local,
-        'JJslits_local': JJslits_local,
-        'SampleScreen_local': SampleScreen_local}
+        "Wiggler_global": Wiggler_global,
+        "FEMask_local": FEMask_local,
+        "DiamondFilter_global": DiamondFilter_global,
+        "DiamondFilter_local1": DiamondFilter_local1,
+        "DiamondFilter_local2": DiamondFilter_local2,
+        "WhiteBeamSlits_local": WhiteBeamSlits_local,
+        "Mirror1_global": Mirror1_global,
+        "Mirror1_local": Mirror1_local,
+        "CM_Slits_local": CM_Slits_local,
+        "SSRL_DCM_global": SSRL_DCM_global,
+        "SSRL_DCM_local1": SSRL_DCM_local1,
+        "SSRL_DCM_local2": SSRL_DCM_local2,
+        "PreM2Screen_local": PreM2Screen_local,
+        "Mirror2_global": Mirror2_global,
+        "Mirror2_local": Mirror2_local,
+        "PhotonShutter_local": PhotonShutter_local,
+        "DBHR1_global": DBHR1_global,
+        "DBHR1_local": DBHR1_local,
+        "DBHR2_global": DBHR2_global,
+        "DBHR2_local": DBHR2_local,
+        "JJslits_local": JJslits_local,
+        "SampleScreen_local": SampleScreen_local,
+    }
     return outDict
 
 
 rrun.run_process = run_process
+
 
 def define_plots():
     plots = []
 
     plot01 = xrtplot.XYCPlot(
         beam=r"Wiggler_global",
-        xaxis=xrtplot.XYCAxis(
-            label=r"x"),
-        yaxis=xrtplot.XYCAxis(
-            label=r"z"),
-        caxis=xrtplot.XYCAxis(
-            label=r"energy",
-            unit=r"eV"),
+        xaxis=xrtplot.XYCAxis(label=r"x"),
+        yaxis=xrtplot.XYCAxis(label=r"z"),
+        caxis=xrtplot.XYCAxis(label=r"energy", unit=r"eV"),
         aspect=r"auto",
         title=r"plot01",
-        fluxFormatStr=r"%g")
+        fluxFormatStr=r"%g",
+    )
     plots.append(plot01)
 
     plot02 = xrtplot.XYCPlot(
         beam=r"DiamondFilter_local2",
-        xaxis=xrtplot.XYCAxis(
-            label=r"x"),
-        yaxis=xrtplot.XYCAxis(
-            label=r"y"),
-        caxis=xrtplot.XYCAxis(
-            label=r"energy",
-            unit=r"eV"),
+        xaxis=xrtplot.XYCAxis(label=r"x"),
+        yaxis=xrtplot.XYCAxis(label=r"y"),
+        caxis=xrtplot.XYCAxis(label=r"energy", unit=r"eV"),
         title=r"plot02",
         fluxKind=r"power",
-        fluxFormatStr=r"%g")
+        fluxFormatStr=r"%g",
+    )
     plots.append(plot02)
 
     plot03 = xrtplot.XYCPlot(
         beam=r"Mirror1_local",
-        xaxis=xrtplot.XYCAxis(
-            label=r"x"),
-        yaxis=xrtplot.XYCAxis(
-            label=r"y"),
-        caxis=xrtplot.XYCAxis(
-            label=r"energy",
-            unit=r"eV"),
+        xaxis=xrtplot.XYCAxis(label=r"x"),
+        yaxis=xrtplot.XYCAxis(label=r"y"),
+        caxis=xrtplot.XYCAxis(label=r"energy", unit=r"eV"),
         aspect=r"auto",
         title=r"plot03",
         fluxKind=r"power",
-        fluxFormatStr=r"%g")
+        fluxFormatStr=r"%g",
+    )
     plots.append(plot03)
 
     plot04 = xrtplot.XYCPlot(
         beam=r"PreM2Screen_local",
-        xaxis=xrtplot.XYCAxis(
-            label=r"x"),
-        yaxis=xrtplot.XYCAxis(
-            label=r"z"),
-        caxis=xrtplot.XYCAxis(
-            label=r"energy",
-            unit=r"eV"),
+        xaxis=xrtplot.XYCAxis(label=r"x"),
+        yaxis=xrtplot.XYCAxis(label=r"z"),
+        caxis=xrtplot.XYCAxis(label=r"energy", unit=r"eV"),
         title=r"plot04",
-        fluxFormatStr=r"%g")
+        fluxFormatStr=r"%g",
+    )
     plots.append(plot04)
 
     plot05 = xrtplot.XYCPlot(
         beam=r"SampleScreen_local",
-        xaxis=xrtplot.XYCAxis(
-            label=r"x"),
-        yaxis=xrtplot.XYCAxis(
-            label=r"z"),
-        caxis=xrtplot.XYCAxis(
-            label=r"energy",
-            unit=r"eV",
-            limits=[7998, 8002]),
+        xaxis=xrtplot.XYCAxis(label=r"x"),
+        yaxis=xrtplot.XYCAxis(label=r"z"),
+        caxis=xrtplot.XYCAxis(label=r"energy", unit=r"eV", limits=[7998, 8002]),
         title=r"plot05",
-        fluxFormatStr=r"%g")
+        fluxFormatStr=r"%g",
+    )
     plots.append(plot05)
     return plots
 
+
 def main():
     BioXAS_Main = build_beamline()
-    E0 = 0.5 * (BioXAS_Main.Wiggler.eMin +
-                BioXAS_Main.Wiggler.eMax)
-    BioXAS_Main.alignE=E0
+    E0 = 0.5 * (BioXAS_Main.Wiggler.eMin + BioXAS_Main.Wiggler.eMax)
+    BioXAS_Main.alignE = E0
     plots = define_plots()
-    xrtrun.run_ray_tracing(
-        plots=plots,
-        repeats=10,
-        backend=r"raycing",
-        beamLine=BioXAS_Main)
+    xrtrun.run_ray_tracing(plots=plots, repeats=10, backend=r"raycing", beamLine=BioXAS_Main)
     return BioXAS_Main
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

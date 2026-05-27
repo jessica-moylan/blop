@@ -3,6 +3,7 @@ import numpy as np
 from . import SimBackend
 from .models.xrt_bioxas_model import build_beamline, build_histRGB, run_process
 
+
 class XRTBIOXASBackend(SimBackend):
     """XRT ray-tracing simulation backend.
 
@@ -48,7 +49,7 @@ class XRTBIOXASBackend(SimBackend):
         # Get information for DBHR devices (pitch and roll for each mirror)
         dbhr_info = await self._get_dbhr_information()
 
-        self._beamline.DBHR1.extraPitch = dbhr_info[0] 
+        self._beamline.DBHR1.extraPitch = dbhr_info[0]
         self._beamline.DBHR1.extraRoll = dbhr_info[2]
         self._beamline.DBHR2.extraPitch = dbhr_info[1]
         self._beamline.DBHR2.extraRoll = dbhr_info[3]
@@ -56,11 +57,10 @@ class XRTBIOXASBackend(SimBackend):
         # Update XRT beamline mirror parameters
         self._beamline.Mirror1.R = mirror_radii_meridional[0]  # Vertical mirror Meridional radius
         self._beamline.Mirror2.R = mirror_radii_meridional[1]  # Horizontal mirror Meridional radius
-        
+
         # Run ray tracing using the beamline and its objects
         outDict = run_process(self._beamline)
         lb = outDict["SampleScreen_local"]  # Get ray data at the sample screen
-
 
         # Build histogram from ray data
         hist2d, _, _ = build_histRGB(lb, lb, limits=self._limits, isScreen=True, shape=[400, 300])
@@ -80,7 +80,7 @@ class XRTBIOXASBackend(SimBackend):
         list[float]
             [R1, R2] where R1 is first mirror (vertical), R2 is second mirror (horizontal)
         """
-        radii = [None, None] 
+        radii = [None, None]
 
         for name, device in self._device_states.items():
             if device["type"] == "ToroidalMirror":
@@ -89,10 +89,10 @@ class XRTBIOXASBackend(SimBackend):
                 radii[mirror_index] = state["radius_meridional"]
 
         return radii
-            
-    async def _get_dbhr_information(self) -> list[float,float]:
+
+    async def _get_dbhr_information(self) -> list[float, float]:
         pitch = [None, None]
-        yaw = [None, None]  
+        yaw = [None, None]
         for name, device in self._device_states.items():
             if device["type"] == "dbhm_xrt":
                 state = await self._get_device_state(name)

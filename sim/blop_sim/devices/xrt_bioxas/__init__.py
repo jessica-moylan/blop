@@ -1,6 +1,6 @@
 """XRTBioXAS-specific devices."""
 
-from .toroidal_mirror import ToroidalMirror
 from .dbhm import DBHR
+from .toroidal_mirror import ToroidalMirror
 
 __all__ = ["ToroidalMirror", "DBHR"]
