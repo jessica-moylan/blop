@@ -44,7 +44,6 @@ tiled = { version = ">=0.2.0", extras = ["all"] }
 bluesky-tiled-plugins = "*"
 ophyd-async = "*"
 opencv-python = "*"
-xrt = { git = "https://github.com/kklmn/xrt.git", branch = "new_glow" }
 
 [feature.py311.dependencies]
 python = "3.11.*"
