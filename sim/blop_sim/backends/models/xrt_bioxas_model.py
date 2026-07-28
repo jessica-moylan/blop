@@ -24,7 +24,7 @@ import xrt.runner as xrtrun
 
 def build_histRGB(lb, gb, limits=None, isScreen=False, shape=None):
     if shape is None:
-        shape = [256, 256]
+        shape = [512, 512]
     good = (lb.state == 1) | (lb.state == 2)
     if isScreen:
         x, y, z = lb.x[good], lb.z[good], lb.y[good]

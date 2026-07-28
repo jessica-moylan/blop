@@ -8,3 +8,4 @@ Tutorials
    tutorials/simple-experiment.md
    tutorials/queueserver.md
    tutorials/xrt-kb-mirrors.md
+   tutorials/xrt-bioxas.md
