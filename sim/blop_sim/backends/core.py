@@ -14,8 +14,11 @@ class SimBackend(ABC):
 
     _instances: dict[type, "SimBackend"] = {}
 
-    def __new__(cls):
-        """Singleton pattern: return existing instance or create new."""
+    def __new__(cls, *args, **kwargs):
+        """Singleton pattern: return existing instance or create new.
+        Accept arbitrary constructor args/kwargs so subclass constructors
+        (for example XRTBackend(fileName=...)) do not fail at __new__.
+        """
         if cls not in cls._instances:
             instance = super().__new__(cls)
             cls._instances[cls] = instance
@@ -58,7 +61,8 @@ class SimBackend(ABC):
         Args:
             device_name: Name of the device
 
-        Returns:
+        Returns
+        -------
             Device state dictionary
         """
         device = self._device_states[device_name]
@@ -69,7 +73,8 @@ class SimBackend(ABC):
     async def generate_beam(self) -> np.ndarray:
         """Generate beam image based on current device states.
 
-        Returns:
+        Returns
+        -------
             2D numpy array with shape self._image_shape
         """
         pass
