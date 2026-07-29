@@ -4,7 +4,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.17.2
+    jupytext_version: 1.19.3
 kernelspec:
   display_name: blop:docs (3.13.13)
   language: python
@@ -21,7 +21,7 @@ This example follows the same workflow as the earlier tutorials
 
 ```{code-cell} ipython3
 import logging
-from pathlib import PurePath
+from pathlib import PurePath 
 
 import cv2
 import numpy as np
@@ -63,7 +63,7 @@ RE.subscribe(tiled_writer)
 
 ## Writing the evaluation function
 
-The evaluation function converts each detector image into objective values used by the optimizer. In this tutorial we compute three outcomes:
+In this tutorial we compute three objectives:
 
 - `intensity` (maximize)
 - `width` (minimize)
@@ -149,6 +149,10 @@ class BioXASEvaluation(EvaluationFunction):
 
 ## Define DOF and Objective Functions
 
+For the DOFs, the mirrors’ meridional radii (R) were included as optimization variables because, in the BioXAS-Main beamline model, they are adjustable. `extraPitch` and `extraRoll` were also added to allow for fine local adjustments around otherwise fixed pitch and roll parameters, and demonstrating having multiple dofs for the same device.
+
+The objective function was designed to produce the most tightly focused beam possible by minimizing both beam height and beam width while simultaneously maximizing beam intensity.
+
 ```{code-cell} ipython3
 VERTICAL_BOUNDS_M = (2500000, 45000000)
 HORIZONTAL_BOUNDS_M = (650000, 4000000)
@@ -167,7 +171,7 @@ mirror2 = KBMirror(backend, mirror_index=1, initial_radius=2500000, name="mirror
 dbhr1 = DBHR(backend, optic_index=0, extraPitch=0, extraRoll=0, name="dbhr1")
 dbhr2 = DBHR(backend, optic_index=1, extraPitch=0, extraRoll=0, name="dbhr2")
 
-dofs = [                        
+dofs = [      
     RangeDOF(actuator=dbhr1.extraPitch, bounds=DCM_BOUNDS_PITCH_1, parameter_type="float"),
     RangeDOF(actuator=dbhr1.extraRoll, bounds=DCM_BOUNDS_ROLL_1, parameter_type="float"),
     RangeDOF(actuator=dbhr2.extraPitch, bounds=DCM_BOUNDS_PITCH_2, parameter_type="float"),
@@ -198,13 +202,16 @@ agent = Agent(
     experiment_type="demo",
 )
 
+# This allows for faster convergence for multi-objective problems but takes significantly longer than the deafult "fast". Requires botorch[fully_bayesian]
+# agent.ax_client.configure_generation_strategy(method="quality")
+
 RE(agent.optimize(1, n_points=15))
 ```
 
 Do some optimization iterations. This simply shows proof of concept since the full iteration loop requires many more iterations before convergence
 
 ```{code-cell} ipython3
-RE(agent.optimize(25))
+RE(agent.optimize(20))
 ```
 
 ## Selecting parameters from the Pareto frontier

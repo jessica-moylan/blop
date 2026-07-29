@@ -165,7 +165,7 @@ def build_beamline():
     BioXAS_Main.CM_Slits = rapts.RectangularAperture(
         bl=BioXAS_Main,
         name=r"CM_Slits",
-        center=[0, 15600, r"auto"],
+        center=[0, 15600, 5.370070042214398],
         opening=[-5.0, 5.0, -2.0, 2.0],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0],
@@ -174,7 +174,7 @@ def build_beamline():
     BioXAS_Main.SSRL_DCM = raycing.oes.DCM(
         bl=BioXAS_Main,
         name=r"SSRL_DCM",
-        center=[0, 25300, r"auto"],
+        center=[0, 25300, 56.14658358172807],
         bragg=r"8000 eV",
         material=Si220,
         material2=Si220,
@@ -193,7 +193,7 @@ def build_beamline():
     BioXAS_Main.PreM2Screen = rscreens.Screen(
         bl=BioXAS_Main,
         name=r"PreM2Screen",
-        center=[0, 26000, r"auto"],
+        center=[0, 26000, 71.70057359656917],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0],
         limPhysX=[0.0, 0.0],
@@ -204,7 +204,7 @@ def build_beamline():
     BioXAS_Main.Mirror2 = roes.ToroidMirror(
         bl=BioXAS_Main,
         name=r"Mirror2",
-        center=[0, 26900, r"auto"],
+        center=[0, 26900, 76.41213277229036],
         pitch=r"-0.15 degree",
         positionRoll=3.141592653589793,
         material=RhOnSi,
@@ -218,7 +218,7 @@ def build_beamline():
     BioXAS_Main.PhotonShutter = rapts.RectangularAperture(
         bl=BioXAS_Main,
         name=r"PhotonShutter",
-        center=[0, 28300, r"auto"],
+        center=[0, 28300, 76.31383174035852],
         opening=[-5.0, 5.0, -2.0, 2.0],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0],
@@ -227,7 +227,7 @@ def build_beamline():
     BioXAS_Main.DBHR1 = raycing.oes.OE(
         bl=BioXAS_Main,
         name=r"DBHR1",
-        center=[0, 29900, r"auto"],
+        center=[0, 29900, 76.43833800329311],
         pitch=r"0.2 deg",
         material=CVDcoating,
         limPhysX=[-10.0, 10.0],
@@ -240,7 +240,7 @@ def build_beamline():
     BioXAS_Main.DBHR2 = raycing.oes.OE(
         bl=BioXAS_Main,
         name=r"DBHR2",
-        center=[0, 30075, r"auto"],
+        center=[0, 30075, 77.6554386900809],
         pitch=r"-0.2 deg",
         positionRoll=3.141592653589793,
         material=CVDcoating,
@@ -254,7 +254,7 @@ def build_beamline():
     BioXAS_Main.JJslits = rapts.RectangularAperture(
         bl=BioXAS_Main,
         name=r"JJslits",
-        center=[0, 30350, r"auto"],
+        center=[0, 30350, 77.63787605593754],
         opening=[-5.0, 5.0, -0.2, 0.2],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0],
@@ -263,7 +263,7 @@ def build_beamline():
     BioXAS_Main.SampleScreen = rscreens.Screen(
         bl=BioXAS_Main,
         name=r"SampleScreen",
-        center=[0, 30650, r"auto"],
+        center=[0, 30650, 77.62595616462798],
         x=[1.0, -0.0, 0.0],
         z=[0.0, 0.0, 1.0],
         limPhysX=[0.0, 0.0],
