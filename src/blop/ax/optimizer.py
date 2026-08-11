@@ -31,10 +31,7 @@ class AxOptimizer(Optimizer, Checkpointable, CanRegisterSuggestions, TrialFaultA
     checkpoint_path : str | None, optional
         The path to the checkpoint file to save the optimizer's state to.
     stopping_strategy : BaseGlobalStoppingStrategy | None, optional
-        An Ax global stopping strategy that decides when to halt optimization early.
-        When provided, the optimizer satisfies :class:`blop.protocols.SupportsStoppingCriteria`
-        and ``optimize`` will stop as soon as ``should_stop()`` returns ``True``.
-        When ``None`` (default), optimization always runs to the requested number of iterations.
+        A stopping strategy that decides when/if optimization should halt early.
     client_kwargs : dict[str, Any] | None, optional
         Additional keyword arguments to configure the Ax client.
     **kwargs : Any
