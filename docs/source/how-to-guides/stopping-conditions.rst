@@ -79,7 +79,7 @@ For more information, see the `Ax documentation <https://github.com/facebook/Ax/
 
 However, if you need a more customizable stopping condition, you can configure one following this format.
 
-.. code-block::
+.. code-block:: python
 
     from ax.global_stopping.strategies.base import BaseGlobalStoppingStrategy
     from ax.core.experiment import Experiment
@@ -109,10 +109,10 @@ Adding Stopping Conditions to the Agent
 
 The Agent can then be configured to use the custom stopping condition.
 
-.. code-block::
+.. code-block:: python
     from blop.ax import Agent, Objective, RangeDOF
 
     agent = Agent(
         ...
-        stopping_strategy= CustomStoppingStrategy(),  # Add your custom stopping strategy here
+        stopping_strategy= CustomStoppingStrategy(),
     )
