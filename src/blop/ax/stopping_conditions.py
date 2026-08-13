@@ -29,7 +29,7 @@ class MaxEvaluationsStopping(BaseGlobalStoppingStrategy):
     def _should_stop_optimization(self, experiment: Experiment) -> tuple[bool, str]:
         """Check if the optimization should stop based on the number of evaluations."""
         completed_trials = len(experiment.completed_trials)
-        if completed_trials < self.min_trials:
+        if completed_trials <= self.min_trials:
             return False, f"Completed trials: {completed_trials}, Min trials: {self.min_trials}"
         should_stop = completed_trials >= self.max_evaluations
         return should_stop, f"Completed trials: {completed_trials}, Max evaluations: {self.max_evaluations}"
