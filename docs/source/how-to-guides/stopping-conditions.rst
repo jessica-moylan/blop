@@ -107,12 +107,4 @@ However, if you need a more customizable stopping condition, you can configure o
 Adding Stopping Conditions to the Agent
 ---------------------------------------
 
-The Agent can then be configured to use the custom stopping condition.
-
-.. code-block:: python
-    from blop.ax import Agent, Objective, RangeDOF
-
-    agent = Agent(
-        ...
-        stopping_strategy= CustomStoppingStrategy(),
-    )
+The Agent can then be configured with an additional parameter, `stopping_strategy`, to use the custom stopping condition.
