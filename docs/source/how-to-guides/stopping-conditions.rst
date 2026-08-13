@@ -73,8 +73,10 @@ These conditions can be a variety of methods such as meeting a certain toleratio
 Defining Stopping Conditions
 ----------------------------
 
-There is a built in stopping condition `ImprovementGlobalStoppingStrategy` which can be used through `from ax.global_stopping.strategies.improvement import ImprovementGlobalStoppingStrategy`. 
-For more information, see the `Ax documentation <https://github.com/facebook/Ax/blob/959c496ef1b9140505a57e07e5859910e0fbd36c/ax/global_stopping/strategies/improvement.py>`_
+There is a built in stopping condition from Ax: `ImprovementGlobalStoppingStrategy` which can be used through `from ax.global_stopping.strategies.improvement import ImprovementGlobalStoppingStrategy`. 
+For more information, see the `Ax documentation <https://github.com/facebook/Ax/blob/959c496ef1b9140505a57e07e5859910e0fbd36c/ax/global_stopping/strategies/base.py>`_
+
+There are also other stopping conditions, which can be found within :module:`blop.ax.stopping_conditions` 
 
 
 However, if you need a more customizable stopping condition, you can configure one following this format.

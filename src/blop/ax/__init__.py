@@ -5,6 +5,7 @@ try:
     from .dof import DOF, ChoiceDOF, DOFConstraint, RangeDOF
     from .objective import Objective, OutcomeConstraint, ScalarizedObjective, to_ax_objective_str
     from .optimizer import AxOptimizer
+    from .stopping_conditions import MaxEvaluationsStopping, ValidConfigurationStopping
 except ImportError as e:
     raise ImportError("The ax integration requires additional dependencies. Install them with: pip install blop[ax]") from e
 
@@ -19,4 +20,6 @@ __all__ = [
     "ScalarizedObjective",
     "to_ax_objective_str",
     "AxOptimizer",
+    "MaxEvaluationsStopping",
+    "ValidConfigurationStopping",
 ]
