@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Ax Degree of Freedom (DOF) &#8212; blop 0.1.dev695 documentation</title>
+    <title>Ax Degree of Freedom (DOF) &#8212; blop 0.1.dev697 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=fee1dcf3"></script>
+    <script src="../../_static/documentation_options.js?v=6d61d280"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -65,7 +65,7 @@
     <link rel="prev" title="Ax Agent" href="agent.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev695" />
+  <meta name="docsearch:version" content="0.1.dev697" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -536,7 +536,7 @@ for discrete parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>name</strong><span class="classifier">str | None</span></dt><dd><p>The name of the DOF. Provide a name if the DOF is not an actuator.</p>
+<dt><strong>name</strong><span class="classifier">str | None</span></dt><dd><p>The name of the DOF.</p>
 </dd>
 <dt><strong>actuator</strong><span class="classifier">Actuator | str | None</span></dt><dd><p>The actuator or its name to use for the DOF. Provide an actuator if the DOF is controllable by Bluesky.</p>
 </dd>
@@ -555,10 +555,13 @@ for discrete parameters.</p>
 </dl>
 </div>
 <p class="rubric">Notes</p>
-<p>Either <code class="docutils literal notranslate"><span class="pre">name</span></code> or <code class="docutils literal notranslate"><span class="pre">actuator</span></code> must be provided, but not both. If <code class="docutils literal notranslate"><span class="pre">actuator</span></code> is
-provided, the DOF will be associated with a Bluesky-controllable device and will
-automatically move during acquisition. If only <code class="docutils literal notranslate"><span class="pre">name</span></code> is provided, the DOF
-represents a parameter that is controlled externally.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">actuator</span></code> is an <code class="docutils literal notranslate"><span class="pre">Actuator</span></code> device instance, the DOF will be associated with a
+Bluesky-controllable device and will automatically move during acquisition.
+If only <code class="docutils literal notranslate"><span class="pre">name</span></code> is provided, the DOF represents a parameter that is controlled externally.
+Both <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">actuator</span></code> can be provided, but only if both are strings. This is
+necessary when using bluesky-queueserver which requires <code class="docutils literal notranslate"><span class="pre">actuator</span></code> to be
+the Python variable name for the device instance and <code class="docutils literal notranslate"><span class="pre">name</span></code> is the <code class="docutils literal notranslate"><span class="pre">device.name</span></code>.
+When both <code class="docutils literal notranslate"><span class="pre">actuator</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code> are specified, the Ax parameter name will be <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="blop.ax.dof.DOF.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#blop.ax.dof.DOF.name" title="Link to this definition">#</a></dt>
@@ -613,11 +616,11 @@ at multiples of this step size.</p>
 <p class="rubric">Examples</p>
 <p>Define a continuous DOF with a name (for non-actuator parameters):</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">blop.ax.dof</span><span class="w"> </span><span class="kn">import</span> <span class="n">RangeDOF</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">RangeDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;voltage&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">RangeDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"voltage"</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">"float"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Define an integer DOF with a step size:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">RangeDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;num_exposures&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">RangeDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"num_exposures"</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">"int"</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For examples with actuators, see <a class="reference internal" href="../../tutorials/simple-experiment.html"><span class="doc">Your first Bayesian optimization with Blop</span></a>.</p>
@@ -702,11 +705,11 @@ Set to True for ordinal parameters (e.g., [“low”, “medium”, “high”])
 <p class="rubric">Examples</p>
 <p>Define a choice DOF for selecting a filter:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">blop.ax.dof</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChoiceDOF</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">ChoiceDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;Al&quot;</span><span class="p">,</span> <span class="s2">&quot;Si&quot;</span><span class="p">],</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">ChoiceDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"filter"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">"none"</span><span class="p">,</span> <span class="s2">"Al"</span><span class="p">,</span> <span class="s2">"Si"</span><span class="p">],</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">"str"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Define an ordered choice DOF:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">ChoiceDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">is_ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dof</span> <span class="o">=</span> <span class="n">ChoiceDOF</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"power"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">parameter_type</span><span class="o">=</span><span class="s2">"int"</span><span class="p">,</span> <span class="n">is_ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="py attribute">
